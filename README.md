@@ -6,7 +6,11 @@ es un script python que toma numeros y nombre de una hoja de calculo de google (
 
 
 ## ¿Que hacer?
-habilitar las credenciales de google 0auth en un json o crear un client secret (esto se realizo pero no se manda el client secret)  compartir el documento con el usuario que se habilitan sus credenciales para el uso de una aplicacion
+habilitar las credenciales de google 0auth en un json o crear un client secret (esto se realizo pero no se manda el client secret)  compartir el documento con el usuario que se habilitan sus credenciales para el uso de una aplicacion 
+(de este paso puede seguir esta referencia
+
+https://www.twilio.com/blog/2017/02/an-easy-way-to-read-and-write-to-a-google-spreadsheet-in-python.html
+)
 
 pip install selemiun
 
