@@ -9,10 +9,14 @@ es un script python que toma numeros y nombre de una hoja de calculo de google (
 habilitar las credenciales de google 0auth en un json o crear un client secret (esto se realizo pero no se manda el client secret)  compartir el documento con el usuario que se habilitan sus credenciales para el uso de una aplicacion
 
 pip install selemiun
+
 pip install oauth2client
+
 python nombredelarchivo.py 'nombre del doc' 
 
 ## Pendientes 
 GUI
+
 Mejor Codigo
+
 MEJOR ORTOFRAFIA!! (perdon por eso)
