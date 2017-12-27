@@ -9,7 +9,15 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import sys
 import time
+import random
+import string
 from PIL import Image
+import os
+
+def generate_pref():
+    return ''.join(random.sample(string.hexdigits, 8))
+
+pref = generate_pref()
 
 # Crear el perfil de firefox
 profile = webdriver.FirefoxProfile()
@@ -24,41 +32,48 @@ driver.get("https://web.whatsapp.com/")
 
 img_qr = driver.find_element_by_xpath("//img[@alt='Scan me!']")
 src_img_qr = img_qr.get_attribute("src")
-driver.get_screenshot_as_file('screenshot.png')
+driver.get_screenshot_as_file(pref+'_screenshot.png')
 pos = img_qr.location
 siz = img_qr.size
 x_i = pos['x'] - 15
 y_i = pos['y'] - 15
 x_f = int(siz['width'] + 15 + pos['x'])
 y_f = int(siz['height'] + 15 + pos['y'])
-img = Image.open('screenshot.png')
+img = Image.open(pref+'_screenshot.png')
 img2 = img.crop((x_i,y_i,x_f,y_f))
-img2.save('crop.png')
-
+img2.save(pref+'_crop.png')
 # conseguir el QR
 
 time.sleep(10)
 # todo lo que pasa axa es para que el usuario pueda escanear el codigo QR se puede aumentar si se prefiere pero esto yo lo encontre optimo
 
-while '<div data-reactroot="" class="app-wrapper app-wrapper-web app-wrapper-main">' not in driver.page_source:
-    new_img = driver.find_element_by_xpath("//img[@alt='Scan me!']")
+while 'class="app-wrapper app-wrapper-web app-wrapper-main"' not in driver.page_source:
+    try:
+        new_img = driver.find_element_by_xpath("//img[@alt='Scan me!']")
+    except:
+        break
     if new_img.get_attribute("src") != src_img_qr:
         print("change image QR")
         img_qr = driver.find_element_by_xpath("//img[@alt='Scan me!']")
         src_img_qr = img_qr.get_attribute("src")
-        driver.get_screenshot_as_file('screenshot.png')
+        driver.get_screenshot_as_file(pref+'_screenshot.png')
         pos = img_qr.location
         siz = img_qr.size
         x_i = pos['x'] - 15
         y_i = pos['y'] - 15
         x_f = int(siz['width'] + 15 + pos['x'])
         y_f = int(siz['height'] + 15 + pos['y'])
-        img = Image.open('screenshot.png')
+        img = Image.open(pref+'_screenshot.png')
         img2 = img.crop((x_i,y_i,x_f,y_f))
-        img2.save('crop.png')
+        img2.save(pref+'_crop.png')
     time.sleep(1)
+#espera hasta que se cambia la pagina, en caso de que cambia el QR tambien lo cambia
+print("entry page")
 
-
+os.remove(pref+'_screenshot.png')
+os.remove(pref+'_crop.png')
+print("remove images")
+#borra los archivos creados
 
 scope = ['https://spreadsheets.google.com/feeds']
 # se cargan las credenciales del json
