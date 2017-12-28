@@ -23,8 +23,9 @@ class Sender:
     def generate_pref(self):
         return ''.join(random.sample(string.hexdigits, 8))
 
-    def send_messages(self, message, name_google_archive):
+    def send_messages(self, message, name_google_archive, app_web):
         pref = self.generate_pref()
+        #crea prefijo
 
         # Crear el perfil de firefox
         profile = webdriver.FirefoxProfile()
@@ -50,31 +51,37 @@ class Sender:
         img2 = img.crop((x_i,y_i,x_f,y_f))
         img2.save(pref+'_crop.png')
         # conseguir el QR
+        app_web.wait_qr(pref)
 
         time.sleep(10)
         # todo lo que pasa axa es para que el usuario pueda escanear el codigo QR se puede aumentar si se prefiere pero esto yo lo encontre optimo
 
-        while 'class="app-wrapper app-wrapper-web app-wrapper-main"' not in driver.page_source:
+        change_page = False
+
+        while not change_page:
             try:
                 new_img = driver.find_element_by_xpath("//img[@alt='Scan me!']")
+                if new_img.get_attribute("src") != src_img_qr:
+                    print("change image QR")
+                    img_qr = driver.find_element_by_xpath("//img[@alt='Scan me!']")
+                    src_img_qr = img_qr.get_attribute("src")
+                    driver.get_screenshot_as_file(pref+'_screenshot.png')
+                    pos = img_qr.location
+                    siz = img_qr.size
+                    x_i = pos['x'] - 15
+                    y_i = pos['y'] - 15
+                    x_f = int(siz['width'] + 15 + pos['x'])
+                    y_f = int(siz['height'] + 15 + pos['y'])
+                    img = Image.open(pref+'_screenshot.png')
+                    img2 = img.crop((x_i,y_i,x_f,y_f))
+                    img2.save(pref+'_crop.png')
+                    app_web.wait_qr(pref)
             except:
-                break
-            if new_img.get_attribute("src") != src_img_qr:
-                print("change image QR")
-                img_qr = driver.find_element_by_xpath("//img[@alt='Scan me!']")
-                src_img_qr = img_qr.get_attribute("src")
-                driver.get_screenshot_as_file(pref+'_screenshot.png')
-                pos = img_qr.location
-                siz = img_qr.size
-                x_i = pos['x'] - 15
-                y_i = pos['y'] - 15
-                x_f = int(siz['width'] + 15 + pos['x'])
-                y_f = int(siz['height'] + 15 + pos['y'])
-                img = Image.open(pref+'_screenshot.png')
-                img2 = img.crop((x_i,y_i,x_f,y_f))
-                img2.save(pref+'_crop.png')
+                app_web.working()
+                change_page = True            
             time.sleep(1)
         #espera hasta que se cambia la pagina, en caso de que cambia el QR tambien lo cambia
+        
         print("entry page")
 
         os.remove(pref+'_screenshot.png')
@@ -109,6 +116,7 @@ class Sender:
             input_box.send_keys(string + Keys.ENTER)
             time.sleep(4)
         # termina el ciclo y se termina la ejecucion del firefox zombie
+        app_web.success()
         driver.close()
 
 
