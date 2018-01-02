@@ -101,4 +101,6 @@ if __name__ == '__main__':
 		 			{"tools.staticdir.on": True,
 	                "tools.staticdir.dir": dir_path},
 	}
+	cherrypy.config.update({'server.socket_host': '0.0.0.0',})
+	cherrypy.config.update({'server.socket_port': int(os.environ.get('PORT', '5000')),})
 	cherrypy.quickstart(Massive_Wsp(),'/',config=conf)
