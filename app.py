@@ -27,12 +27,12 @@ class Massive_Wsp(object):
           	<li>Ingrese mensaje y el nombre de la planilla</li>
           	Nota: Si desea ingresar el nombre de la persona a enviar el mensaje
           	debe colocar "(nombre)".<br>
-          	El sistema reemplezada (nombre) por el nombre del contacto en la planilla
+          	El sistema reemplazará (nombre) por el nombre del contacto en la planilla
           	<br>
           	<li>Presione boton Enviar y luego escanee el codigo QR</li>
           	</ol>
             <form method="get" action="send_message" id = "sender">
-              Mensaje: <textarea rows="4" cols="50" name="message" form="sender">Ingrese su mensaje</textarea>
+              Mensaje: <textarea rows="4" cols="50" name="message" form="sender">Hola (nombre) ...</textarea>
               <br>
               Nombre Archivo: <input type="text" name="google_archive">
               <br>
