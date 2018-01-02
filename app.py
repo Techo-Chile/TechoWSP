@@ -10,29 +10,27 @@ class Massive_Wsp(object):
 
 	def __init__(self):
 		self.sender = None
-
-	def redirect_connecting(self):
-		raise cherrypy.HTTPRedirect("./connecting")
-
-	def redirect_qr(self, pref):
-		raise cherrypy.HTTPRedirect("./wait_qr?pref="+pref)
-		#return "<head><meta http-equiv='refresh' content='0; url=./wait_qr?pref="+pref+"' /></head>"
-
-	def redirect_new_qr(self, pref):
-		raise cherrypy.HTTPRedirect("./new_qr?pref="+pref)
-
-	def redirect_working(self):
-		raise cherrypy.HTTPRedirect("./working")
-
-	def redirect_success(self):
-		raise cherrypy.HTTPRedirect("./success")
 	
 	@cherrypy.expose
 	@cherrypy.config(**{'response.stream': True})
 	def index(self):
+		link = 'https://docs.google.com/a/techo.org/spreadsheets/d/1Y_uVPcS4eV9iscZ_aThzTJFMn26hxFC6wRZT1jNOCOU/edit?usp=sharing'
 		return """<html>
           <head></head>
           <body>
+          	<h1> Bienvenido a wsp-masivo Techo</h1>
+          	<h2> Instrucciones </h2>
+          	<ol>
+          	<li>Realice una copia de <a href='"""+link+"""'>esta </a>planilla en su drive personal</li>
+          	<li>Llene su planilla con los nombres y los numeros</li>
+          	<li>Comparta su planilla con: masivo@wsp-masivo.iam.gserviceaccount.com</li>
+          	<li>Ingrese mensaje y el nombre de la planilla</li>
+          	Nota: Si desea ingresar el nombre de la persona a enviar el mensaje
+          	debe colocar "(nombre)".<br>
+          	El sistema reemplezada (nombre) por el nombre del contacto en la planilla
+          	<br>
+          	<li>Presione boton Enviar y luego escanee el codigo QR</li>
+          	</ol>
             <form method="get" action="send_message" id = "sender">
               Mensaje: <textarea rows="4" cols="50" name="message" form="sender">Ingrese su mensaje</textarea>
               <br>
@@ -87,6 +85,12 @@ class Massive_Wsp(object):
 	@cherrypy.expose
 	def success(self):
 		return "envio exitoso"
+
+	@cherrypy.expose
+	def error(self):
+		ans = "hubo un error, vuelva a intentar el envio:<br>"
+		ans += '<a href="/index">inicio</a>'
+		return ans
 
      
 

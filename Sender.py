@@ -38,25 +38,38 @@ class Sender:
         return '''<meta http-equiv="refresh" content="0;URL='/good_connection'" />'''
 
     def get_qr(self):
-        img_qr = self.driver.find_element_by_xpath("//img[@alt='Scan me!']")
-        self.src_img_qr = img_qr.get_attribute("src")
-        self.driver.get_screenshot_as_file(self.pref+'_screenshot.png')
-        pos = img_qr.location
-        siz = img_qr.size
-        x_i = pos['x'] - 15
-        y_i = pos['y'] - 15
-        x_f = int(siz['width'] + 15 + pos['x'])
-        y_f = int(siz['height'] + 15 + pos['y'])
-        img = Image.open(self.pref+'_screenshot.png')
-        img2 = img.crop((x_i,y_i,x_f,y_f))
-        img2.save(self.pref+'_crop.png')
+        try:
+            img_qr = self.driver.find_element_by_xpath("//img[@alt='Scan me!']")
+            self.src_img_qr = img_qr.get_attribute("src")
+            self.driver.get_screenshot_as_file(self.pref+'_screenshot.png')
+            pos = img_qr.location
+            siz = img_qr.size
+            x_i = pos['x'] - 15
+            y_i = pos['y'] - 15
+            x_f = int(siz['width'] + 15 + pos['x'])
+            y_f = int(siz['height'] + 15 + pos['y'])
+            img = Image.open(self.pref+'_screenshot.png')
+            img2 = img.crop((x_i,y_i,x_f,y_f))
+            img2.save(self.pref+'_crop.png')
+            return '''<meta http-equiv="refresh" content="0;URL='/wait_qr?pref='''+self.pref+'''" />'''
+        except:
+            time.sleep(1)
+            return self.get_qr()
 
-        return '''<meta http-equiv="refresh" content="0;URL='/wait_qr?pref='''+self.pref+'''" />'''
+        
 
     def get_new_qr(self):
         change_page = False
 
         while not change_page:
+            try:
+                refresh_button = self.driver.find_element_by_xpath('//button[@class="HnNfm"]')
+                self.driver.close()
+                os.remove(self.pref+'_screenshot.png')
+                os.remove(self.pref+'_crop.png')
+                return '''<meta http-equiv="refresh" content="0;URL='/error'" />'''
+            except:
+                pass
             try:
                 new_img = self.driver.find_element_by_xpath("//img[@alt='Scan me!']")
                 if new_img.get_attribute("src") != self.src_img_qr:
