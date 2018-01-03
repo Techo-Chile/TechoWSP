@@ -19,28 +19,29 @@ class Massive_Wsp(object):
           <head></head>
           <body>
           	<h1> Bienvenido a wsp-masivo Techo</h1>
-          	<h2> Instrucciones </h2>
+          	<h2> Instrucciones:</h2>
           	<ol>
           	<li>Realice una copia de <a href='"""+link+"""'>esta </a>planilla en su drive personal</li>
-          	<li>Llene su planilla con los nombres y los numeros</li>
+          	<li>Llene su planilla con los nombres y los números</li>
           	<li>Comparta su planilla con: masivo@wsp-masivo.iam.gserviceaccount.com</li>
           	<li>Ingrese mensaje y el nombre de la planilla</li>
           	Nota: Si desea ingresar el nombre de la persona a enviar el mensaje
           	debe colocar "(nombre)".<br>
           	El sistema reemplazará (nombre) por el nombre del contacto en la planilla
           	<br>
-          	<li>Presione boton Enviar y luego escanee el codigo QR</li>
-          	</ol>
+          	
+          	
             <form method="get" action="send_message" id = "sender">
               Mensaje: <textarea rows="4" cols="50" name="message" form="sender">Hola (nombre) ...</textarea>
               <br>
-              Nombre Archivo: <input type="text" name="google_archive">
+              Nombre Planilla: <input type="text" name="google_archive">
               <br>
+              <li>Presione boton Enviar y luego escanee el codigo QR</li>
               <button type="submit">Enviar</button>
             </form>
+            </ol>
           </body>
-        	</html>"""
-		
+        	</html>"""	
 
 
 

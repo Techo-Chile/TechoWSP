@@ -1,4 +1,8 @@
-selenium==2.53.6
+selenium
 gspread
 oauth2client
 cherrypy
+Image
+image
+PyVirtualDisplay
+xvfbwrapper

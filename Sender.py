@@ -10,10 +10,11 @@ from oauth2client.service_account import ServiceAccountCredentials
 import sys
 import time
 from PIL import Image
-import random
+import random   
 import string
 import os
 from app import *
+from pyvirtualdisplay import Display
 
 class Sender:
 
@@ -23,8 +24,10 @@ class Sender:
         self.name_google_archive = name_google_archive
         self.src_img_qr = None
         self.driver = None
+        self.display = Display(visible=0, size=(1024, 768))
 
     def connect(self):
+        self.display.start()
         # Crear el perfil de firefox
         profile = webdriver.FirefoxProfile()
         # Dar las opciones de firefox para permitir el cambio de ventana con contenido en el dom
@@ -54,9 +57,7 @@ class Sender:
             return '''<meta http-equiv="refresh" content="0;URL='/wait_qr?pref='''+self.pref+'''" />'''
         except:
             time.sleep(1)
-            return self.get_qr()
-
-        
+            return self.get_qr()        
 
     def get_new_qr(self):
         change_page = False
@@ -67,6 +68,7 @@ class Sender:
                 self.driver.close()
                 os.remove(self.pref+'_screenshot.png')
                 os.remove(self.pref+'_crop.png')
+                self.display.stop()
                 return '''<meta http-equiv="refresh" content="0;URL='/error'" />'''
             except:
                 pass
@@ -111,7 +113,7 @@ class Sender:
         pat = re.compile(r'\s+')
         # ciclo 
         for name in list_of_hashes:
-            # se crea el mensaje si se quiere crear un mensaje tipo se agrega a esta cadena
+            # se crea el mensaje si se quiere cheroku create --buildpack https://github.com/fxtentacle/heroku-xvfb-buildpack.gitrear un mensaje tipo se agrega a esta cadena
         
             string = self.message.replace("(nombre)",(name['Nombre']))
             #se reemplaza (nombre) por nombre del contacto
@@ -127,6 +129,7 @@ class Sender:
             time.sleep(2)
         # termina el ciclo y se termina la ejecucion del firefox zombie
         self.driver.close()
+        self.display.stop()
         return '''<meta http-equiv="refresh" content="0;URL='/success'" />'''
 
 
