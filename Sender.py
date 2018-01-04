@@ -115,15 +115,14 @@ class Sender:
         pat = re.compile(r'\s+')
         # ciclo 
         for name in list_of_hashes:
-            # se crea el mensaje si se quiere cheroku create --buildpack https://github.com/fxtentacle/heroku-xvfb-buildpack.gitrear un mensaje tipo se agrega a esta cadena
-        
+            # se crea el mensaje si se quiere 
             string = self.message.replace("(nombre)",(name['Nombre']))
             #se reemplaza (nombre) por nombre del contacto
-            self.driver.get("https://web.whatsapp.com/send?phone="+pat.sub('',str(name['Telefono']))+"")
-            # se guarda el cuadro de texto por la class 
-            time.sleep(1)
+
+            self.driver.get("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
             f = open('source_page.txt',"w+")
             f.write(self.driver.page_source)
+            # se guarda el cuadro de texto por la class 
             inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"]'
             wait = WebDriverWait(self.driver, 600)
             input_box = wait.until(EC.presence_of_element_located((By.XPATH, inp_xpath)))   
