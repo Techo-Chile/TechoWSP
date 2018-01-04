@@ -119,6 +119,8 @@ class Sender:
         
             string = self.message.replace("(nombre)",(name['Nombre']))
             #se reemplaza (nombre) por nombre del contacto
+            f = open('source_page.txt',"w+")
+            f.write(self.driver.page_source)
 
             self.driver.get("https://web.whatsapp.com/send?phone="+pat.sub('',str(name['Telefono']))+"")
             # se guarda el cuadro de texto por la class 
