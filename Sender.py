@@ -36,6 +36,7 @@ class Sender:
         profile.set_preference("javascript.enabled", False)
         # Crear el driver con las opciones que deseamos
         self.driver = webdriver.Firefox(profile)
+        self.driver.maximize_window()
         # levantar el firefox controlado con la pagina web whatsapp
         self.driver.get("https://web.whatsapp.com/")
 
