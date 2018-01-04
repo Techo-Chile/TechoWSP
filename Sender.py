@@ -25,10 +25,10 @@ class Sender:
         self.name_google_archive = name_google_archive
         self.src_img_qr = None
         self.driver = None
-        self.display = Display(visible=0, size=(1024, 768))
+        #self.display = Display(visible=0, size=(1024, 768))
 
     def connect(self):
-        self.display.start()
+        #self.display.start()
         # Crear el perfil de firefox
         profile = webdriver.FirefoxProfile()
         # Dar las opciones de firefox para permitir el cambio de ventana con contenido en el dom
@@ -70,7 +70,7 @@ class Sender:
                 self.driver.close()
                 os.remove(self.pref+'_screenshot.png')
                 os.remove(self.pref+'_crop.png')
-                self.display.stop()
+                #self.display.stop()
                 return '''<meta http-equiv="refresh" content="0;URL='/error'" />'''
             except:
                 pass
@@ -119,14 +119,11 @@ class Sender:
         
             string = self.message.replace("(nombre)",(name['Nombre']))
             #se reemplaza (nombre) por nombre del contacto
-            f = open('source_page.txt',"w+")
-            f.write(self.driver.page_source)
-            print(name['Telefono'])
-            print("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
-            print(("https://web.whatsapp.com/send?phone="+pat.sub('',str(name['Telefono']))+""))
             self.driver.get("https://web.whatsapp.com/send?phone="+pat.sub('',str(name['Telefono']))+"")
             # se guarda el cuadro de texto por la class 
             time.sleep(1)
+            f = open('source_page.txt',"w+")
+            f.write(self.driver.page_source)
             inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"]'
             wait = WebDriverWait(self.driver, 600)
             input_box = wait.until(EC.presence_of_element_located((By.XPATH, inp_xpath)))   
@@ -136,7 +133,7 @@ class Sender:
             time.sleep(2)
         # termina el ciclo y se termina la ejecucion del firefox zombie
         self.driver.close()
-        self.display.stop()
+        #self.display.stop()
         return '''<meta http-equiv="refresh" content="0;URL='/success'" />'''
 
 
