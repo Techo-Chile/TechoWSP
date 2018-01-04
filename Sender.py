@@ -25,10 +25,10 @@ class Sender:
         self.name_google_archive = name_google_archive
         self.src_img_qr = None
         self.driver = None
-        #self.display = Display(visible=0, size=(1024, 768))
+        self.display = Display(visible=0, size=(1024, 768))
 
     def connect(self):
-        #self.display.start()
+        self.display.start()
         # Crear el perfil de firefox
         profile = webdriver.FirefoxProfile()
         # Dar las opciones de firefox para permitir el cambio de ventana con contenido en el dom
@@ -70,7 +70,7 @@ class Sender:
                 self.driver.close()
                 os.remove(self.pref+'_screenshot.png')
                 os.remove(self.pref+'_crop.png')
-                #self.display.stop()
+                self.display.stop()
                 return '''<meta http-equiv="refresh" content="0;URL='/error'" />'''
             except:
                 pass
@@ -133,7 +133,7 @@ class Sender:
             time.sleep(2)
         # termina el ciclo y se termina la ejecucion del firefox zombie
         self.driver.close()
-        #self.display.stop()
+        self.display.stop()
         return '''<meta http-equiv="refresh" content="0;URL='/success'" />'''
 
 
