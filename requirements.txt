@@ -1,0 +1,8 @@
+selenium
+gspread
+oauth2client
+cherrypy
+Image
+image
+PyVirtualDisplay
+xvfbwrapper
