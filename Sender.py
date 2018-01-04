@@ -122,7 +122,7 @@ class Sender:
             f = open('source_page.txt',"w+")
             f.write(self.driver.page_source)
 
-            self.driver.get("https://web.whatsapp.com/send?phone="+pat.sub('',str(name['Telefono']))+"")
+            self.driver.get("https://api.whatsapp.com/send?phone="+pat.sub('',str(name['Telefono']))+"")
             # se guarda el cuadro de texto por la class 
             time.sleep(1)
             inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"]'
