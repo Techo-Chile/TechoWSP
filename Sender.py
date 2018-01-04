@@ -120,6 +120,8 @@ class Sender:
             #se reemplaza (nombre) por nombre del contacto
 
             self.driver.get("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
+            print("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
+            
             f = open('source_page.txt',"w+")
             f.write(self.driver.page_source)
             # se guarda el cuadro de texto por la class 
