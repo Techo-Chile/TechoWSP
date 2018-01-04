@@ -122,7 +122,7 @@ class Sender:
             self.driver.get("https://web.whatsapp.com/send?phone="+pat.sub('',str(name['Telefono']))+"")
             # se guarda el cuadro de texto por la class 
             time.sleep(1)
-            inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"][@dir="auto"][@data-tab="1"]'
+            inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"]'
             wait = WebDriverWait(self.driver, 600)
             input_box = wait.until(EC.presence_of_element_located((By.XPATH, inp_xpath)))   
             # se manda la tecla enter y un mensaje ya creado
