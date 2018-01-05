@@ -96,11 +96,10 @@ class Sender:
         return '''<meta http-equiv="refresh" content="0;URL='/working'" />'''
             
     def send_messages(self):
-        print("entry page")
 
         os.remove(self.pref+'_screenshot.png')
         os.remove(self.pref+'_crop.png')
-        print("remove images")
+        
         #borra los archivos creados
 
         scope = ['https://spreadsheets.google.com/feeds']
@@ -120,7 +119,7 @@ class Sender:
             #se reemplaza (nombre) por nombre del contacto
 
             self.driver.get("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
-            print("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
+
             msg_sended = False
             while not msg_sended:
                 try:
