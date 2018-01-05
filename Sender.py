@@ -121,10 +121,6 @@ class Sender:
 
             self.driver.get("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
             print("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
-            print("acceder a pagina")
-            time.sleep(10)
-            self.driver.save_screenshot('screenshot.jpg')
-            print("se guardo la pagina")
             msg_sended = False
             while not msg_sended:
                 try:
@@ -138,7 +134,7 @@ class Sender:
                     msg_sended = True
                     print("envio de mensaje a "+name['nombre'])
                 except:
-                    time.sleep(5)
+                    time.sleep(3)
         # termina el ciclo y se termina la ejecucion del firefox zombie
         self.driver.close()
         self.display.stop()
