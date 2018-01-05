@@ -7,9 +7,6 @@ import time
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class Massive_Wsp(object):
-
-	def __init__(self):
-		self.sender = None
 	
 	@cherrypy.expose
 	@cherrypy.config(**{'response.stream': True})
@@ -41,23 +38,22 @@ class Massive_Wsp(object):
             </form>
             </ol>
           </body>
-        	</html>"""	
-
-
+        	</html>"""
+		
 
 	@cherrypy.expose
 	@cherrypy.config(**{'response.stream': True})
 	def send_message(self,message, google_archive):
-		self.sender = Sender(message,google_archive)
+		cherrypy.session['sender'] = Sender(message,google_archive)
 		#return self.sender.send_messages(message,google_archive,self)
 		yield "conectando con whatsap web"
-		yield self.sender.connect()
+		yield cherrypy.session['sender'].connect()
 
 	@cherrypy.expose
 	@cherrypy.config(**{'response.stream': True})
 	def good_connection(self):
 		yield "Conexion realizada con exito"
-		yield self.sender.get_qr()
+		yield cherrypy.session['sender'].get_qr()
 
 
 	@cherrypy.expose
@@ -67,7 +63,7 @@ class Massive_Wsp(object):
 		yield """Escanee la imagen QR:
     		<br><br>"""+'<img src="images/'+img+'" border = "0"/>'
 		time.sleep(1)
-		yield self.sender.get_new_qr()
+		yield cherrypy.session['sender'].get_new_qr()
 
 	@cherrypy.expose
 	@cherrypy.config(**{'response.stream': True})
@@ -75,20 +71,23 @@ class Massive_Wsp(object):
 		img = pref+"_crop.png"
 		yield """La imagen QR cambió:
     		<br><br>"""+'<img src="images/'+img+'" border = "0"/>'
-		yield self.sender.get_new_qr()
+		yield cherrypy.session['sender'].get_new_qr()
 
 	@cherrypy.expose
 	@cherrypy.config(**{'response.stream': True})
 	def working(self):
 		yield "QR aceptada"
-		yield self.sender.send_messages()
+		yield "<br> <h2>Revise la planilla para saber el estado de los envios</h2>"
+		yield cherrypy.session['sender'].send_messages()
 
 	@cherrypy.expose
 	def success(self):
+		self.working = False
 		return "envio exitoso"
 
 	@cherrypy.expose
 	def error(self):
+		self.working = False
 		ans = "hubo un error, vuelva a intentar el envio:<br>"
 		ans += '<a href="/index">inicio</a>'
 		return ans
@@ -98,7 +97,10 @@ class Massive_Wsp(object):
 	
 
 if __name__ == '__main__':
-	conf = {   "/images":
+	conf = {   '/': {
+		            'tools.sessions.on': True
+		        	},	
+				"/images":
 		 			{"tools.staticdir.on": True,
 	                "tools.staticdir.dir": dir_path},
 	}
