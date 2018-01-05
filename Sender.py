@@ -58,7 +58,7 @@ class Sender:
             img2.save(self.pref+'_crop.png')
             return '''<meta http-equiv="refresh" content="0;URL='/wait_qr?pref='''+self.pref+'''" />'''
         except:
-            time.sleep(1)
+            time.sleep(2)
             return self.get_qr()        
 
     def get_new_qr(self):
