@@ -6,7 +6,8 @@ Al pulsarlo aparecer la litsa de droplets, el script esta almacenado en el techo
 En "more" hay una opcion que dice "Acces console", ahi se puede acceder directamente a la consola
 
 En caso de que quieras añadir una llave ssh para acceder:
-https://www.digitalocean.com/community/questions/how-do-i-add-an-ssh-key-to-an-existing-droplet
+https://cloud.digitalocean.com/settings/security -> SSH KEYS
+
 El computador que ocupaba yo: PC-041 ya tenia la llave ssh activada. Para acceder:
 $ ssh root@159.89.178.93
 
