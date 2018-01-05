@@ -22,7 +22,7 @@ $ screen -r
 debido a que solo hay una se deberia acceder directamente. 
 
 Para cerrar la screen (sin detener el proceso):
-Ctrl-A d
+Ctrl-a d
 
 El acceso a esta screen seria ideal solo usarla para saber si el codigo esta corriendo.
 
@@ -36,6 +36,9 @@ luego en el servidor (fuera de la screen) hacer pull
 Al modificar el script, este sigue corriendo, acceder a la screen para verificar si es asi:
 
 $ screen -r
+
+cerrar screen(sin detener proceso):
+ctr-a d
 
 En caso contrario, para hacerlo correr: 
 
