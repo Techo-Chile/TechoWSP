@@ -123,8 +123,7 @@ class Sender:
             print("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
             print("acceder a pagina")
             time.sleep(10)
-            f = open('source_page.txt',"w+")
-            f.write(self.driver.page_source)
+            self.driver.save_screenshot('screenshot.jpg')
             print("se guardo la pagina")
             msg_sended = False
             while not msg_sended:
