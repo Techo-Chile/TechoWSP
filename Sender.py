@@ -121,17 +121,25 @@ class Sender:
 
             self.driver.get("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
             print("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
+            print("acceder a pagina")
             time.sleep(10)
             f = open('source_page.txt',"w+")
             f.write(self.driver.page_source)
-            # se guarda el cuadro de texto por la class 
-            inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"]'
-            wait = WebDriverWait(self.driver, 600)
-            input_box = wait.until(EC.presence_of_element_located((By.XPATH, inp_xpath)))   
-            # se manda la tecla enter y un mensaje ya creado
-            time.sleep(3)         
-            input_box.send_keys(string + Keys.ENTER)
-            time.sleep(2)
+            print("se guardo la pagina")
+            msg_sended = False
+            while not msg_sended:
+                try:
+                    inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"]'
+                    input_box = self.driver.find_element_by_xpath(inp_xpath)
+                    # se guarda el cuadro de texto por la class 
+                    time.sleep(3)         
+                    input_box.send_keys(string + Keys.ENTER)
+                    # se manda la tecla enter y un mensaje ya creado
+                    time.sleep(2)
+                    msg_sended = True
+                    print("envio de mensaje a "+name['nombre'])
+                except:
+                    time.sleep(5)
         # termina el ciclo y se termina la ejecucion del firefox zombie
         self.driver.close()
         self.display.stop()
