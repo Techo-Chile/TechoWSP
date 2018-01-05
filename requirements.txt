@@ -6,4 +6,3 @@ Image
 image
 PyVirtualDisplay
 xvfbwrapper
-urllib3
