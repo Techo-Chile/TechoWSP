@@ -19,13 +19,14 @@ from pyvirtualdisplay import Display
 
 class Sender:
 
-    def __init__(self, message, name_google_archive):
+    def __init__(self, message, name_google_archive, web):
         self.pref = ''.join(random.sample(string.hexdigits, 8))
         self.message = message
         self.name_google_archive = name_google_archive
         self.src_img_qr = None
         self.driver = None
         self.display = Display(visible=0, size=(1024, 768))
+        self.web = web
 
     def connect(self):
         self.display.start()
@@ -38,7 +39,10 @@ class Sender:
         self.driver = webdriver.Firefox(profile)
         self.driver.maximize_window()
         # levantar el firefox controlado con la pagina web whatsapp
-        self.driver.get("https://web.whatsapp.com/")
+        try:
+            self.driver.get("https://web.whatsapp.com/")
+        except:
+            return'''<meta http-equiv="refresh" content="0;URL='/error'" />'''
 
         return '''<meta http-equiv="refresh" content="0;URL='/good_connection'" />'''
 
@@ -71,6 +75,7 @@ class Sender:
                 os.remove(self.pref+'_screenshot.png')
                 os.remove(self.pref+'_crop.png')
                 self.display.stop()
+                self.web.bussy = False
                 return '''<meta http-equiv="refresh" content="0;URL='/error'" />'''
             except:
                 pass
@@ -143,6 +148,7 @@ class Sender:
         # termina el ciclo y se termina la ejecucion del firefox zombie
         self.driver.close()
         self.display.stop()
+        self.web.bussy = False
         return '''<meta http-equiv="refresh" content="0;URL='/success'" />'''
 
 

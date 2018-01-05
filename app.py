@@ -10,12 +10,14 @@ class Massive_Wsp(object):
 
 	def __init__(self):
 		self.sender = None
-	
+		self.bussy = False
+
 	@cherrypy.expose
 	@cherrypy.config(**{'response.stream': True})
 	def index(self):
 		link = 'https://docs.google.com/a/techo.org/spreadsheets/d/1Y_uVPcS4eV9iscZ_aThzTJFMn26hxFC6wRZT1jNOCOU/edit?usp=sharing'
-		return """<html>
+		if not self.bussy:
+			return """<html>
           <head></head>
           <body>
           	<h1> Bienvenido a wsp-masivo Techo</h1>
@@ -42,13 +44,15 @@ class Massive_Wsp(object):
             </ol>
           </body>
         	</html>"""	
-
+		else:
+			return "Sistema en uso, intentelo en otro momento porfavor"
 
 
 	@cherrypy.expose
 	@cherrypy.config(**{'response.stream': True})
 	def send_message(self,message, google_archive):
-		self.sender = Sender(message,google_archive)
+		self.bussy = True
+		self.sender = Sender(message,google_archive, self)
 		#return self.sender.send_messages(message,google_archive,self)
 		yield "conectando con whatsap web"
 		yield self.sender.connect()
@@ -86,16 +90,15 @@ class Massive_Wsp(object):
 
 	@cherrypy.expose
 	def success(self):
+		self.bussy = False
 		return "envio exitoso"
 
 	@cherrypy.expose
 	def error(self):
+		self.bussy = False
 		ans = "hubo un error, vuelva a intentar el envio:<br>"
 		ans += '<a href="/index">inicio</a>'
 		return ans
-
-     
-
 	
 
 if __name__ == '__main__':
