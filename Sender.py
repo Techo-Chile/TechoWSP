@@ -99,7 +99,7 @@ class Sender:
 
         os.remove(self.pref+'_screenshot.png')
         os.remove(self.pref+'_crop.png')
-        
+
         #borra los archivos creados
 
         scope = ['https://spreadsheets.google.com/feeds']
@@ -113,6 +113,7 @@ class Sender:
         list_of_hashes = sheet.get_all_records()
         pat = re.compile(r'\s+')
         # ciclo 
+        ind = 2
         for name in list_of_hashes:
             # se crea el mensaje si se quiere 
             string = self.message.replace("(nombre)",(name['Nombre']))
@@ -121,19 +122,24 @@ class Sender:
             self.driver.get("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
 
             msg_sended = False
+            tried = 0
             while not msg_sended:
                 try:
+                    tried += 1
                     inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"]'
                     input_box = self.driver.find_element_by_xpath(inp_xpath)
                     # se guarda el cuadro de texto por la class 
-                    time.sleep(3)         
                     input_box.send_keys(string + Keys.ENTER)
                     # se manda la tecla enter y un mensaje ya creado
                     time.sleep(2)
                     msg_sended = True
-                    print("envio de mensaje a "+name['nombre'])
+                    sheet.update_acell('C'+str(ind),'Si')
                 except:
-                    time.sleep(3)
+                    if tried > 3:
+                        msg_sended = True
+                        sheet.update_acell('C'+str(ind),'No')
+                    time.sleep(2)
+            ind += 1
         # termina el ciclo y se termina la ejecucion del firefox zombie
         self.driver.close()
         self.display.stop()
