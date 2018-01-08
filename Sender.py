@@ -19,13 +19,14 @@ from pyvirtualdisplay import Display
 
 class Sender:
 
-    def __init__(self, message, name_google_archive):
+    def __init__(self, message, name_google_archive, web):
         self.pref = ''.join(random.sample(string.hexdigits, 8))
         self.message = message
         self.name_google_archive = name_google_archive
         self.src_img_qr = None
         self.driver = None
         self.display = Display(visible=0, size=(1024, 768))
+        self.web = web
 
     def connect(self):
         self.display.start()
@@ -36,8 +37,12 @@ class Sender:
         profile.set_preference("javascript.enabled", False)
         # Crear el driver con las opciones que deseamos
         self.driver = webdriver.Firefox(profile)
+        self.driver.maximize_window()
         # levantar el firefox controlado con la pagina web whatsapp
-        self.driver.get("https://web.whatsapp.com/")
+        try:
+            self.driver.get("https://web.whatsapp.com/")
+        except:
+            return'''<meta http-equiv="refresh" content="0;URL='/error'" />'''
 
         return '''<meta http-equiv="refresh" content="0;URL='/good_connection'" />'''
 
@@ -57,7 +62,7 @@ class Sender:
             img2.save(self.pref+'_crop.png')
             return '''<meta http-equiv="refresh" content="0;URL='/wait_qr?pref='''+self.pref+'''" />'''
         except:
-            time.sleep(1)
+            time.sleep(2)
             return self.get_qr()        
 
     def get_new_qr(self):
@@ -70,6 +75,7 @@ class Sender:
                 os.remove(self.pref+'_screenshot.png')
                 os.remove(self.pref+'_crop.png')
                 self.display.stop()
+                self.web.bussy = False
                 return '''<meta http-equiv="refresh" content="0;URL='/error'" />'''
             except:
                 pass
@@ -95,11 +101,10 @@ class Sender:
         return '''<meta http-equiv="refresh" content="0;URL='/working'" />'''
             
     def send_messages(self):
-        print("entry page")
 
         os.remove(self.pref+'_screenshot.png')
         os.remove(self.pref+'_crop.png')
-        print("remove images")
+
         #borra los archivos creados
 
         scope = ['https://spreadsheets.google.com/feeds']
@@ -113,25 +118,37 @@ class Sender:
         list_of_hashes = sheet.get_all_records()
         pat = re.compile(r'\s+')
         # ciclo 
+        ind = 2
         for name in list_of_hashes:
-            # se crea el mensaje si se quiere cheroku create --buildpack https://github.com/fxtentacle/heroku-xvfb-buildpack.gitrear un mensaje tipo se agrega a esta cadena
-        
+            # se crea el mensaje si se quiere 
             string = self.message.replace("(nombre)",(name['Nombre']))
             #se reemplaza (nombre) por nombre del contacto
 
-            self.driver.get("https://web.whatsapp.com/send?phone="+pat.sub('',str(name['Telefono']))+"")
-            # se guarda el cuadro de texto por la class 
-            time.sleep(1)
-            inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"][@dir="auto"][@data-tab="1"]'
-            wait = WebDriverWait(self.driver, 600)
-            input_box = wait.until(EC.presence_of_element_located((By.XPATH, inp_xpath)))   
-            # se manda la tecla enter y un mensaje ya creado
-            time.sleep(3)         
-            input_box.send_keys(string + Keys.ENTER)
-            time.sleep(2)
+            self.driver.get("https://web.whatsapp.com/send?phone="+str(name['Telefono']))
+
+            msg_sended = False
+            tried = 0
+            while not msg_sended:
+                try:
+                    tried += 1
+                    inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"]'
+                    input_box = self.driver.find_element_by_xpath(inp_xpath)
+                    # se guarda el cuadro de texto por la class 
+                    input_box.send_keys(string + Keys.ENTER)
+                    # se manda la tecla enter y un mensaje ya creado
+                    time.sleep(2)
+                    msg_sended = True
+                    sheet.update_acell('C'+str(ind),'Si')
+                except:
+                    if tried > 3:
+                        msg_sended = True
+                        sheet.update_acell('C'+str(ind),'No')
+                    time.sleep(2)
+            ind += 1
         # termina el ciclo y se termina la ejecucion del firefox zombie
         self.driver.close()
         self.display.stop()
+        self.web.bussy = False
         return '''<meta http-equiv="refresh" content="0;URL='/success'" />'''
 
 
