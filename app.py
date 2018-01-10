@@ -51,6 +51,8 @@ class Massive_Wsp(object):
 	@cherrypy.expose
 	@cherrypy.config(**{'response.stream': True})
 	def send_message(self,message, google_archive):
+		if self.bussy:
+			return "Sistema en uso, intentelo en otro momento porfavor"
 		self.bussy = True
 		self.sender = Sender(message,google_archive, self)
 		#return self.sender.send_messages(message,google_archive,self)
