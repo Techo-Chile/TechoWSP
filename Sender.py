@@ -131,7 +131,7 @@ class Sender:
             while not msg_sended:
                 try:
                     tried += 1
-                    inp_xpath = '//div[@class="pluggable-input-body copyable-text selectable-text"]'
+                    inp_xpath = '//div[@class="_2S1VP copyable-text selectable-text"]'
                     input_box = self.driver.find_element_by_xpath(inp_xpath)
                     # se guarda el cuadro de texto por la class 
                     input_box.send_keys(string + Keys.ENTER)
